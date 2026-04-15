@@ -11,6 +11,10 @@ import edge_tts
 import torch
 import functools
 import shutil
+from dotenv import load_dotenv
+
+# Carga las variables desde el archivo .env
+load_dotenv()
 
 # ==========================================
 # PARCHE DE SEGURIDAD PYTORCH 2.6+
@@ -29,6 +33,7 @@ GEMINI_KEY = os.getenv("GEMINI_KEY")
 
 if not GEMINI_KEY:
     print("❌ ERROR: No se encontró la GEMINI_KEY en el archivo .env")
+    #print("Gemini Key: ", GEMINI_KEY)
     exit()
 
 MODEL_PATH = "Jarvis_Proyect_200e_4600s.pth" 
@@ -55,24 +60,29 @@ pygame.mixer.init()
 
 def speak(text, update_status_func):
     if not text: return
-    update_status_func("Jarvis: Procesando voz Stark...")
+    update_status_func("Jarvis: Ajustando frecuencia Stark...")
     
     if pygame.mixer.get_init():
         pygame.mixer.music.stop()
         pygame.mixer.music.unload()
     
     try:
-        # 1. Base Neuronal (Microsoft Edge)
-        communicate = edge_tts.Communicate(text, "es-MX-JorgeNeural", pitch="-10Hz", rate="+0%")
+        # 1. Base Neuronal con Edge-TTS
+        # Forzamos una tasa de muestreo limpia
+        communicate = edge_tts.Communicate(text, "es-MX-JorgeNeural", pitch="-10Hz")
         asyncio.run(communicate.save("base_temp.wav"))
         
-        # 2. Transformación RVC
+        # 2. Transformación RVC con Seguro de Vida
         try:
             rvc_engine.load_model(MODEL_PATH)
+            # El error 'tuple' suele ser porque rvc-python no encuentra el hubert_base.pt
+            # o el audio de entrada está corrupto/abierto.
             rvc_engine.infer_file("base_temp.wav", "jarvis_output.wav")
             audio_final = "jarvis_output.wav"
-        except Exception as e:
-            print(f"RVC Error (usando base): {e}")
+        except Exception as rvc_err:
+            # Si el tensor falla, no nos detenemos. El revenue no espera.
+            print(f"Fallo técnico en RVC: {rvc_err}")
+            print("Aplicando bypass: Usando base neuronal de alta calidad.")
             audio_final = "base_temp.wav"
         
         # 3. Reproducción
@@ -83,9 +93,8 @@ def speak(text, update_status_func):
             time.sleep(0.1)
             
     except Exception as e:
-        print(f"Error sistema voz: {e}")
-        update_status_func("Error en motor de audio.")
-
+        print(f"Error crítico de audio: {e}")
+        update_status_func("Sistema de audio en mantenimiento.")
 async def saludo_inicial(app_instance):
     texto = (
         "Buenos Días Señor Angel. Su canal de youtube ha tenido un buen crecimiento. "
