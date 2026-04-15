@@ -39,6 +39,7 @@ if not GEMINI_KEY:
 MODEL_PATH = "Jarvis_Proyect_200e_4600s.pth" 
 INDEX_PATH = "Jarvis_Proyect.index"
 
+
 genai.configure(api_key=GEMINI_KEY)
 model = genai.GenerativeModel(
     model_name='gemini-2.5-flash', 
