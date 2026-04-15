@@ -1,0 +1,50 @@
+# ==========================================
+# SEGURIDAD Y CREDENCIALES (CRÍTICO)
+# ==========================================
+.env
+.env.local
+.env.*
+*.config
+# Ignorar el script si contiene la llave hardcodeada (opcional pero seguro)
+# VirtualAssistent_con_llave.py
+
+# ==========================================
+# ENTORNOS VIRTUALES (PESADOS)
+# ==========================================
+venv/
+.venv/
+env/
+ENV/
+bin/
+lib/
+share/
+Include/
+Lib/
+Scripts/
+pyvenv.cfg
+
+# ==========================================
+# TEMPORALES DE AUDIO (AHORRO DE ESPACIO)
+# ==========================================
+*.wav
+*.mp3
+base_temp.wav
+jarvis_output.wav
+saludo_jarvis.wav
+
+# ==========================================
+# PYTHON & CACHE
+# ==========================================
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.tox/
+.analytics
+
+# ==========================================
+# SISTEMA OPERATIVO
+# ==========================================
+.DS_Store
+Thumbs.db
+desktop.ini
