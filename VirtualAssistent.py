@@ -27,7 +27,7 @@ except Exception:
     pass
 
 # ==========================================
-# CONFIGURACIÓN TÉCNICA (STARK INDUSTRIES)
+# CONFIGURACIÓN TÉCNICA
 # ==========================================
 GEMINI_KEY = os.getenv("GEMINI_KEY")
 
